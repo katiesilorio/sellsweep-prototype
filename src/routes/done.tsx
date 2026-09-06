@@ -14,7 +14,7 @@ export const Route = createFileRoute("/done")({
       { property: "og:description", content: "Every listing is posted to the marketplaces you chose." },
     ],
   }),
-  component: Done;
+  component: Done,
 });
 
 function Done() {
