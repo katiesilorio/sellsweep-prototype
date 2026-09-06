@@ -10,33 +10,129 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as AnalyzingRouteImport } from './routes/analyzing'
+import { Route as DoneRouteImport } from './routes/done'
+import { Route as PostingRouteImport } from './routes/posting'
+import { Route as ReviewRouteImport } from './routes/review'
+import { Route as SummaryRouteImport } from './routes/summary'
+import { Route as ListingListingIdMarketplaceRouteImport } from './routes/listing.$listingId.$marketplace'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyzingRoute = AnalyzingRouteImport.update({
+  id: '/analyzing',
+  path: '/analyzing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DoneRoute = DoneRouteImport.update({
+  id: '/done',
+  path: '/done',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PostingRoute = PostingRouteImport.update({
+  id: '/posting',
+  path: '/posting',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReviewRoute = ReviewRouteImport.update({
+  id: '/review',
+  path: '/review',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SummaryRoute = SummaryRouteImport.update({
+  id: '/summary',
+  path: '/summary',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ListingListingIdMarketplaceRoute =
+  ListingListingIdMarketplaceRouteImport.update({
+    id: '/listing/$listingId/$marketplace',
+    path: '/listing/$listingId/$marketplace',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/analyzing': typeof AnalyzingRoute
+  '/done': typeof DoneRoute
+  '/posting': typeof PostingRoute
+  '/review': typeof ReviewRoute
+  '/summary': typeof SummaryRoute
+  '/listing/$listingId/$marketplace': typeof ListingListingIdMarketplaceRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/analyzing': typeof AnalyzingRoute
+  '/done': typeof DoneRoute
+  '/posting': typeof PostingRoute
+  '/review': typeof ReviewRoute
+  '/summary': typeof SummaryRoute
+  '/listing/$listingId/$marketplace': typeof ListingListingIdMarketplaceRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/analyzing': typeof AnalyzingRoute
+  '/done': typeof DoneRoute
+  '/posting': typeof PostingRoute
+  '/review': typeof ReviewRoute
+  '/summary': typeof SummaryRoute
+  '/listing/$listingId/$marketplace': typeof ListingListingIdMarketplaceRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/analyzing'
+    | '/done'
+    | '/posting'
+    | '/review'
+    | '/summary'
+    | '/listing/$listingId/$marketplace'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/analyzing'
+    | '/done'
+    | '/posting'
+    | '/review'
+    | '/summary'
+    | '/listing/$listingId/$marketplace'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/analyzing'
+    | '/done'
+    | '/posting'
+    | '/review'
+    | '/summary'
+    | '/listing/$listingId/$marketplace'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  AnalyzingRoute: typeof AnalyzingRoute
+  DoneRoute: typeof DoneRoute
+  PostingRoute: typeof PostingRoute
+  ReviewRoute: typeof ReviewRoute
+  SummaryRoute: typeof SummaryRoute
+  ListingListingIdMarketplaceRoute: typeof ListingListingIdMarketplaceRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +144,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analyzing': {
+      id: '/analyzing'
+      path: '/analyzing'
+      fullPath: '/analyzing'
+      preLoaderRoute: typeof AnalyzingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/done': {
+      id: '/done'
+      path: '/done'
+      fullPath: '/done'
+      preLoaderRoute: typeof DoneRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/posting': {
+      id: '/posting'
+      path: '/posting'
+      fullPath: '/posting'
+      preLoaderRoute: typeof PostingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/review': {
+      id: '/review'
+      path: '/review'
+      fullPath: '/review'
+      preLoaderRoute: typeof ReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/summary': {
+      id: '/summary'
+      path: '/summary'
+      fullPath: '/summary'
+      preLoaderRoute: typeof SummaryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/listing/$listingId/$marketplace': {
+      id: '/listing/$listingId/$marketplace'
+      path: '/listing/$listingId/$marketplace'
+      fullPath: '/listing/$listingId/$marketplace'
+      preLoaderRoute: typeof ListingListingIdMarketplaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  AnalyzingRoute: AnalyzingRoute,
+  DoneRoute: DoneRoute,
+  PostingRoute: PostingRoute,
+  ReviewRoute: ReviewRoute,
+  SummaryRoute: SummaryRoute,
+  ListingListingIdMarketplaceRoute: ListingListingIdMarketplaceRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
