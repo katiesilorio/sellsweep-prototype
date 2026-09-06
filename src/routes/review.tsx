@@ -179,7 +179,7 @@ function MultipleTable() {
           <div className="grid grid-cols-[180px_minmax(0,1fr)_260px] gap-8">
             <div className="flex flex-wrap gap-2">
               {l.photos.map((p, i) => (
-                <PhotoTile key={p.id} photo={p} size={i === 0 ? "md" : "sm"} />
+                <PhotoTile key={p.id} photo={p} size={i === 0 ? "md" : "sm"} hideCaption />
               ))}
             </div>
 

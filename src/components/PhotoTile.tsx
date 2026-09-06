@@ -4,10 +4,12 @@ export function PhotoTile({
   photo,
   size = "md",
   action,
+  hideCaption,
 }: {
   photo: DemoPhoto;
   size?: "sm" | "md" | "lg";
   action?: { label: string; onClick: () => void; symbol: string };
+  hideCaption?: boolean;
 }) {
   const box = size === "sm" ? "size-16" : size === "lg" ? "aspect-square w-full" : "size-32";
   return (
@@ -22,7 +24,7 @@ export function PhotoTile({
           className="size-full object-cover"
         />
       </div>
-      {size !== "sm" && (
+      {size !== "sm" && !hideCaption && (
         <figcaption className="mt-1.5 text-[0.7rem] text-muted-foreground">
           {photo.label}
         </figcaption>
