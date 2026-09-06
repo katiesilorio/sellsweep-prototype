@@ -27,7 +27,7 @@ export type Listing = {
   weight: string;
   shippingOverride: number | null;
   flagged: boolean;
-  flagText?: string;
+  flagText?: string | undefined;
   accepted: boolean;
   marketplaces: Record<Marketplace, MarketplaceConfig>;
 };
@@ -104,7 +104,7 @@ export function SellsweepProvider({ children }: { children: ReactNode }) {
     }
 
     function listingFromPhotos(id: string, photos: DemoPhoto[]): Listing {
-      const item = itemForPhoto(photos[0].id);
+      const item = itemForPhoto(photos[0]!.id);
       return {
         id,
         photos,
@@ -135,7 +135,7 @@ export function SellsweepProvider({ children }: { children: ReactNode }) {
       },
       photosLoaded,
       loadPhotos: (m) => {
-        const items = m === "one" ? [DEMO_ITEMS[0]] : DEMO_ITEMS;
+        const items = m === "one" ? [DEMO_ITEMS[0]!] : DEMO_ITEMS;
         setAvailablePhotos(items.flatMap((i) => i.photos));
         setPhotosLoaded(true);
       },
