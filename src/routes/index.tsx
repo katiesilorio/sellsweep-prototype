@@ -133,11 +133,15 @@ function Upload() {
 
           <div className="mt-8 space-y-4">
             {s.groups.map((g) => (
-              <button
+              <div
                 key={g.id}
-                type="button"
+                role="button"
+                tabIndex={0}
                 onClick={() => s.selectGroup(g.id)}
-                className={`block w-full rounded-2xl border p-5 text-left ${
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") s.selectGroup(g.id);
+                }}
+                className={`block w-full cursor-pointer rounded-2xl border p-5 text-left ${
                   s.selectedGroupId === g.id
                     ? "border-primary bg-primary/[0.03]"
                     : "border-border bg-card"
@@ -169,7 +173,7 @@ function Upload() {
                     );
                   })}
                 </div>
-              </button>
+              </div>
             ))}
 
             <button className="btn-ghost" onClick={s.addGroup}>
