@@ -39,8 +39,30 @@ function Summary() {
   const flagged = listings.filter((l) => l.flagged);
   const canPost = flagged.every((l) => l.accepted);
 
+  const actions = (
+    <>
+      <span className="text-xs text-muted-foreground">
+        {flagged.length === 0
+          ? "No copyright risk on these listings."
+          : !canPost
+            ? "Accept the copyright risk on flagged listings to continue."
+            : ""}
+      </span>
+      <Link to="/review" className="btn-ghost">
+        Back
+      </Link>
+      <button
+        className="btn-primary"
+        disabled={!canPost}
+        onClick={() => navigate({ to: "/posting" })}
+      >
+        Post to marketplaces
+      </button>
+    </>
+  );
+
   return (
-    <AppShell step="Summary">
+    <AppShell step="Summary" actions={actions}>
       <h1 className="text-3xl font-semibold">
         You are about to post {listings.length} {listings.length === 1 ? "listing" : "listings"} to{" "}
         {marketplaceCount} {marketplaceCount === 1 ? "marketplace" : "marketplaces"}.
@@ -95,25 +117,6 @@ function Summary() {
         })}
       </div>
 
-      <div className="mt-12 flex items-center gap-3">
-        <Link to="/review" className="btn-ghost">
-          Back
-        </Link>
-        <button
-          className="btn-primary"
-          disabled={!canPost}
-          onClick={() => navigate({ to: "/posting" })}
-        >
-          Post to marketplaces
-        </button>
-        <span className="text-xs text-muted-foreground">
-          {flagged.length === 0
-            ? "No copyright risk on these listings."
-            : !canPost
-              ? "Accept the copyright risk on flagged listings to continue."
-              : ""}
-        </span>
-      </div>
     </AppShell>
   );
 }

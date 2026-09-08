@@ -61,8 +61,19 @@ function Upload() {
     navigate({ to: "/analyzing" });
   }
 
+  const actions = (
+    <>
+      {s.mode === "multiple" && s.photosLoaded && !canContinue && (
+        <span className="text-xs text-muted-foreground">Assign every photo to a listing to continue.</span>
+      )}
+      <button className="btn-primary" disabled={!canContinue} onClick={next}>
+        Next
+      </button>
+    </>
+  );
+
   return (
-    <AppShell step="Upload">
+    <AppShell step="Upload" actions={actions}>
       {dialogOpen && (
         <ModeDialog
           onPick={(m) => {
@@ -217,16 +228,6 @@ function Upload() {
         </div>
       )}
 
-      <div className="mt-14 flex flex-col items-center">
-        <button className="btn-primary" disabled={!canContinue} onClick={next}>
-          Next
-        </button>
-        {s.mode === "multiple" && s.photosLoaded && !canContinue && (
-          <p className="mt-3 text-xs text-muted-foreground">
-            Assign every photo to a listing to continue.
-          </p>
-        )}
-      </div>
     </AppShell>
   );
 }

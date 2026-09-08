@@ -1,9 +1,11 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { AppShell } from "@/components/AppShell";
+import { ListingPreview } from "@/components/ListingPreview";
 import { PhotoTile } from "@/components/PhotoTile";
-import { MARKETPLACES, MARKETPLACE_SLUGS } from "@/data/demo";
-import { useSellsweep } from "@/lib/store";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
+import { MARKETPLACES, type Marketplace } from "@/data/demo";
+import { useSellsweep, type Listing } from "@/lib/store";
 
 export const Route = createFileRoute("/done")({
   head: () => ({
@@ -20,6 +22,7 @@ export const Route = createFileRoute("/done")({
 function Done() {
   const navigate = useNavigate();
   const { listings, reset } = useSellsweep();
+  const [open, setOpen] = useState<{ listing: Listing; marketplace: Marketplace } | null>(null);
 
   useEffect(() => {
     if (listings.length === 0) navigate({ to: "/" });
@@ -47,14 +50,14 @@ function Done() {
                 <h2 className="text-base font-medium">{l.title}</h2>
                 <div className="mt-3 flex flex-wrap gap-4">
                   {MARKETPLACES.filter((m) => l.marketplaces[m].selected).map((m) => (
-                    <Link
+                    <button
                       key={m}
-                      to="/listing/$listingId/$marketplace"
-                      params={{ listingId: l.id, marketplace: MARKETPLACE_SLUGS[m] }}
+                      type="button"
+                      onClick={() => setOpen({ listing: l, marketplace: m })}
                       className="text-sm text-primary underline underline-offset-2"
                     >
                       View on {m}
-                    </Link>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -74,6 +77,25 @@ function Done() {
           Start another batch
         </button>
       </div>
+
+      <Dialog open={open !== null} onOpenChange={(o) => !o && setOpen(null)}>
+        <DialogContent className="max-h-[92vh] w-[min(1200px,94vw)] max-w-none overflow-y-auto p-0">
+          {open && (
+            <>
+              <div className="border-b border-border bg-muted/60 px-8 py-3 pr-14">
+                <DialogTitle className="text-xs font-normal text-muted-foreground">
+                  Simulated <span className="text-foreground">{open.marketplace}</span> listing page inside
+                  the sellsweep prototype, not the real marketplace. Nothing here is clickable for real.
+                </DialogTitle>
+                <DialogDescription className="sr-only">
+                  A simulated marketplace listing page for {open.listing.title}.
+                </DialogDescription>
+              </div>
+              <ListingPreview listing={open.listing} marketplace={open.marketplace} />
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </AppShell>
   );
 }

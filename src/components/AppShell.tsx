@@ -32,21 +32,21 @@ function useIsNarrow() {
 function StepIndicator({ current }: { current: Step }) {
   const activeIndex = STEPS.indexOf(current);
   return (
-    <div className="flex items-center gap-2.5">
+    <div className="flex items-center gap-3">
       {STEPS.map((step, i) => (
-        <div key={step} className="flex items-center gap-2.5">
+        <div key={step} className="flex items-center gap-3">
           <span
             className={
               i === activeIndex
-                ? "text-xs font-medium text-primary"
+                ? "text-sm font-medium text-primary"
                 : i < activeIndex
-                  ? "text-xs text-foreground"
-                  : "text-xs text-muted-foreground"
+                  ? "text-sm text-foreground"
+                  : "text-sm text-muted-foreground"
             }
           >
             {step}
           </span>
-          {i < STEPS.length - 1 && <span className="h-px w-5 bg-border" />}
+          {i < STEPS.length - 1 && <span className="h-px w-8 bg-border" />}
         </div>
       ))}
     </div>
@@ -57,10 +57,13 @@ export function AppShell({
   step,
   children,
   wide,
+  actions,
 }: {
   step: Step;
   children: ReactNode;
   wide?: boolean;
+  /** The screen's Back / Next controls. Rendered right-aligned at the top of the page and again at the bottom. */
+  actions?: ReactNode;
 }) {
   const narrow = useIsNarrow();
   if (narrow === null) return null;
@@ -78,15 +81,25 @@ export function AppShell({
       </div>
       <div className="border-b border-border">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-10 py-4">
-          <Link to="/" className="font-display text-base font-semibold tracking-tight">
+          <Link to="/" className="font-display text-2xl font-semibold tracking-tight">
             sellsweep
           </Link>
           <StepIndicator current={step} />
         </div>
       </div>
       <main className={wide ? "mx-auto max-w-[1400px] px-10 py-14" : "mx-auto max-w-6xl px-10 py-14"}>
+        {actions && <div className="mb-8 flex items-center justify-end gap-3">{actions}</div>}
         {children}
+        {actions && <div className="mt-12 flex items-center justify-end gap-3">{actions}</div>}
       </main>
+      <footer className="border-t border-border">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-10 py-5 text-xs text-muted-foreground">
+          <span>sellsweep prototype. Nothing here is real.</span>
+          <Link to="/about" className="text-primary underline underline-offset-2">
+            About sellsweep
+          </Link>
+        </div>
+      </footer>
     </div>
   );
 }

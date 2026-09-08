@@ -359,8 +359,28 @@ function Review() {
     Object.values(l.marketplaces).some((c) => c.selected),
   );
 
+  const actions = (
+    <>
+      {!canContinue && (
+        <span className="text-xs text-muted-foreground">
+          Select at least one marketplace for every listing.
+        </span>
+      )}
+      <Link to="/" className="btn-ghost">
+        Back
+      </Link>
+      <button
+        className="btn-primary"
+        disabled={!canContinue}
+        onClick={() => navigate({ to: "/summary" })}
+      >
+        Continue
+      </button>
+    </>
+  );
+
   return (
-    <AppShell step="Review" wide={mode === "multiple"}>
+    <AppShell step="Review" wide={mode === "multiple"} actions={actions}>
       <h1 className="text-3xl font-semibold">Review</h1>
       <p className="mt-2 text-muted-foreground">
         sellsweep drafted everything. Change anything you like.
@@ -371,23 +391,6 @@ function Review() {
         {mode === "one" && listings[0] ? <SingleForm listing={listings[0]} /> : <MultipleTable />}
       </div>
 
-      <div className="mt-12 flex items-center gap-3">
-        <Link to="/" className="btn-ghost">
-          Back
-        </Link>
-        <button
-          className="btn-primary"
-          disabled={!canContinue}
-          onClick={() => navigate({ to: "/summary" })}
-        >
-          Continue
-        </button>
-        {!canContinue && (
-          <span className="text-xs text-muted-foreground">
-            Select at least one marketplace for every listing.
-          </span>
-        )}
-      </div>
     </AppShell>
   );
 }
