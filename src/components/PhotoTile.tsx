@@ -4,11 +4,14 @@ export function PhotoTile({
   photo,
   size = "md",
   action,
+  secondaryAction,
   hideCaption,
 }: {
   photo: DemoPhoto;
   size?: "sm" | "md" | "lg";
   action?: { label: string; onClick: () => void; symbol: string };
+  /** Optional second control, rendered at the top-left corner (for example, delete the photo). */
+  secondaryAction?: { label: string; onClick: () => void; symbol: string };
   hideCaption?: boolean;
 }) {
   const box = size === "sm" ? "size-16" : size === "lg" ? "aspect-square w-full" : "size-32";
@@ -38,6 +41,17 @@ export function PhotoTile({
           className="absolute right-1.5 top-1.5 flex size-6 items-center justify-center rounded-full border border-border bg-background text-sm leading-none text-foreground shadow-card hover:bg-muted"
         >
           {action.symbol}
+        </button>
+      )}
+      {secondaryAction && (
+        <button
+          type="button"
+          aria-label={secondaryAction.label}
+          title={secondaryAction.label}
+          onClick={secondaryAction.onClick}
+          className="absolute left-1.5 top-1.5 flex size-6 items-center justify-center rounded-full border border-border bg-background text-sm leading-none text-muted-foreground shadow-card hover:bg-muted hover:text-foreground"
+        >
+          {secondaryAction.symbol}
         </button>
       )}
     </figure>

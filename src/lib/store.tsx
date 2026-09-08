@@ -76,6 +76,10 @@ type Ctx = {
   selectGroup: (id: string) => void;
   assignPhoto: (photoId: string) => void;
   unassignPhoto: (photoId: string) => void;
+  /** Delete a photo from the batch entirely (single and multiple modes). */
+  removePhoto: (photoId: string) => void;
+  /** Delete a listing group; its photos return to the ungrouped section automatically. */
+  removeGroup: (groupId: string) => void;
   ungroupedPhotos: DemoPhoto[];
   listings: Listing[];
   buildListings: () => void;
@@ -94,6 +98,8 @@ export function SellsweepProvider({ children }: { children: ReactNode }) {
   const [groups, setGroups] = useState<Group[]>([]);
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
   const [listings, setListings] = useState<Listing[]>([]);
+  // Counts every group ever created in this batch, so a deleted listing's number is never reused.
+  const [groupCounter, setGroupCounter] = useState(0);
 
   const value = useMemo<Ctx>(() => {
     const assignedIds = new Set(groups.flatMap((g) => g.photoIds));
@@ -132,6 +138,7 @@ export function SellsweepProvider({ children }: { children: ReactNode }) {
         setGroups([]);
         setSelectedGroupId(null);
         setListings([]);
+        setGroupCounter(0);
       },
       photosLoaded,
       loadPhotos: (m) => {
@@ -142,9 +149,11 @@ export function SellsweepProvider({ children }: { children: ReactNode }) {
       availablePhotos,
       groups,
       addGroup: () => {
-        const id = `group-${groups.length + 1}`;
+        const n = groupCounter + 1;
+        const id = `group-${n}`;
+        setGroupCounter(n);
         // Newest listing goes to the top so the user never scrolls to find the one they just added.
-        setGroups((g) => [{ id, name: `Listing ${g.length + 1}`, photoIds: [] }, ...g]);
+        setGroups((g) => [{ id, name: `Listing ${n}`, photoIds: [] }, ...g]);
         setSelectedGroupId(id);
       },
       selectedGroupId,
@@ -161,6 +170,21 @@ export function SellsweepProvider({ children }: { children: ReactNode }) {
         setGroups((gs) =>
           gs.map((g) => ({ ...g, photoIds: g.photoIds.filter((p) => p !== photoId) })),
         );
+      },
+      removePhoto: (photoId) => {
+        setGroups((gs) =>
+          gs.map((g) => ({ ...g, photoIds: g.photoIds.filter((p) => p !== photoId) })),
+        );
+        setAvailablePhotos((ps) => ps.filter((p) => p.id !== photoId));
+      },
+      removeGroup: (groupId) => {
+        // Photos are not deleted; ungroupedPhotos is derived, so they reappear in the ungrouped section.
+        setGroups((gs) => gs.filter((g) => g.id !== groupId));
+        setSelectedGroupId((cur) => {
+          if (cur !== groupId) return cur;
+          const remaining = groups.filter((g) => g.id !== groupId);
+          return remaining[0]?.id ?? null;
+        });
       },
       ungroupedPhotos,
       listings,
@@ -207,9 +231,10 @@ export function SellsweepProvider({ children }: { children: ReactNode }) {
         setGroups([]);
         setSelectedGroupId(null);
         setListings([]);
+        setGroupCounter(0);
       },
     };
-  }, [mode, photosLoaded, availablePhotos, groups, selectedGroupId, listings]);
+  }, [mode, photosLoaded, availablePhotos, groups, selectedGroupId, listings, groupCounter]);
 
   return <SellsweepContext.Provider value={value}>{children}</SellsweepContext.Provider>;
 }

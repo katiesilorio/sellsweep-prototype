@@ -100,7 +100,15 @@ function Upload() {
         <div className="mx-auto mt-12 max-w-3xl">
           <div className="flex flex-wrap gap-5">
             {s.availablePhotos.map((p) => (
-              <PhotoTile key={p.id} photo={p} />
+              <PhotoTile
+                key={p.id}
+                photo={p}
+                action={{
+                  label: "Remove photo",
+                  symbol: "\u2715",
+                  onClick: () => s.removePhoto(p.id),
+                }}
+              />
             ))}
           </div>
         </div>
@@ -125,6 +133,11 @@ function Upload() {
                     label: "Add to selected listing",
                     symbol: "+",
                     onClick: () => s.assignPhoto(p.id),
+                  }}
+                  secondaryAction={{
+                    label: "Remove photo",
+                    symbol: "\u2715",
+                    onClick: () => s.removePhoto(p.id),
                   }}
                 />
               ))}
@@ -153,8 +166,18 @@ function Upload() {
               >
                 <div className="flex items-center justify-between">
                   <span className="font-medium">{g.name}</span>
-                  <span className="text-xs text-muted-foreground">
-                    {s.selectedGroupId === g.id ? "Selected" : "Click to select"}
+                  <span className="flex items-center gap-4 text-xs text-muted-foreground">
+                    <span>{s.selectedGroupId === g.id ? "Selected" : "Click to select"}</span>
+                    <button
+                      type="button"
+                      className="underline underline-offset-2 hover:text-foreground"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        s.removeGroup(g.id);
+                      }}
+                    >
+                      Delete listing
+                    </button>
                   </span>
                 </div>
                 <div className="mt-4 flex flex-wrap gap-4">
