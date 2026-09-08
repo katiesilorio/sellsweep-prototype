@@ -1,17 +1,24 @@
+import type { ReactNode } from "react";
 import type { DemoPhoto } from "@/data/demo";
+
+export type TileAction = {
+  label: string;
+  onClick: () => void;
+  icon: ReactNode;
+  /** Destructive actions render muted until hovered. */
+  tone?: "default" | "destructive";
+};
 
 export function PhotoTile({
   photo,
   size = "md",
-  action,
-  secondaryAction,
+  actions,
   hideCaption,
 }: {
   photo: DemoPhoto;
   size?: "sm" | "md" | "lg";
-  action?: { label: string; onClick: () => void; symbol: string };
-  /** Optional second control, rendered at the top-left corner (for example, delete the photo). */
-  secondaryAction?: { label: string; onClick: () => void; symbol: string };
+  /** Rendered side by side in the top-right corner, in the order given. */
+  actions?: TileAction[];
   hideCaption?: boolean;
 }) {
   const box = size === "sm" ? "size-16" : size === "lg" ? "aspect-square w-full" : "size-32";
@@ -32,27 +39,25 @@ export function PhotoTile({
           {photo.label}
         </figcaption>
       )}
-      {action && (
-        <button
-          type="button"
-          aria-label={action.label}
-          title={action.label}
-          onClick={action.onClick}
-          className="absolute right-1.5 top-1.5 flex size-6 items-center justify-center rounded-full border border-border bg-background text-sm leading-none text-foreground shadow-card hover:bg-muted"
-        >
-          {action.symbol}
-        </button>
-      )}
-      {secondaryAction && (
-        <button
-          type="button"
-          aria-label={secondaryAction.label}
-          title={secondaryAction.label}
-          onClick={secondaryAction.onClick}
-          className="absolute left-1.5 top-1.5 flex size-6 items-center justify-center rounded-full border border-border bg-background text-sm leading-none text-muted-foreground shadow-card hover:bg-muted hover:text-foreground"
-        >
-          {secondaryAction.symbol}
-        </button>
+      {actions && actions.length > 0 && (
+        <div className="absolute right-1.5 top-1.5 flex items-center gap-1">
+          {actions.map((a) => (
+            <button
+              key={a.label}
+              type="button"
+              aria-label={a.label}
+              title={a.label}
+              onClick={a.onClick}
+              className={`flex size-6 items-center justify-center rounded-full border border-border bg-background shadow-card hover:bg-muted ${
+                a.tone === "destructive"
+                  ? "text-muted-foreground hover:text-foreground"
+                  : "text-foreground"
+              }`}
+            >
+              {a.icon}
+            </button>
+          ))}
+        </div>
       )}
     </figure>
   );

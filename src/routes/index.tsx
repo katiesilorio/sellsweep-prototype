@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { Plus, Trash2, Undo2 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { PhotoTile } from "@/components/PhotoTile";
 import { useSellsweep } from "@/lib/store";
@@ -103,11 +104,14 @@ function Upload() {
               <PhotoTile
                 key={p.id}
                 photo={p}
-                action={{
-                  label: "Remove photo",
-                  symbol: "\u2715",
-                  onClick: () => s.removePhoto(p.id),
-                }}
+                actions={[
+                  {
+                    label: "Delete photo",
+                    icon: <Trash2 className="size-3.5" />,
+                    tone: "destructive",
+                    onClick: () => s.removePhoto(p.id),
+                  },
+                ]}
               />
             ))}
           </div>
@@ -129,16 +133,19 @@ function Upload() {
                 <PhotoTile
                   key={p.id}
                   photo={p}
-                  action={{
-                    label: "Add to selected listing",
-                    symbol: "+",
-                    onClick: () => s.assignPhoto(p.id),
-                  }}
-                  secondaryAction={{
-                    label: "Remove photo",
-                    symbol: "\u2715",
-                    onClick: () => s.removePhoto(p.id),
-                  }}
+                  actions={[
+                    {
+                      label: "Add to selected listing",
+                      icon: <Plus className="size-3.5" />,
+                      onClick: () => s.assignPhoto(p.id),
+                    },
+                    {
+                      label: "Delete photo",
+                      icon: <Trash2 className="size-3.5" />,
+                      tone: "destructive",
+                      onClick: () => s.removePhoto(p.id),
+                    },
+                  ]}
                 />
               ))}
             </div>
@@ -170,13 +177,15 @@ function Upload() {
                     <span>{s.selectedGroupId === g.id ? "Selected" : "Click to select"}</span>
                     <button
                       type="button"
-                      className="underline underline-offset-2 hover:text-foreground"
+                      aria-label="Delete listing"
+                      title="Delete listing"
+                      className="flex size-6 items-center justify-center rounded-full border border-border bg-background text-muted-foreground shadow-card hover:bg-muted hover:text-foreground"
                       onClick={(e) => {
                         e.stopPropagation();
                         s.removeGroup(g.id);
                       }}
                     >
-                      Delete listing
+                      <Trash2 className="size-3.5" />
                     </button>
                   </span>
                 </div>
@@ -191,11 +200,13 @@ function Upload() {
                       <PhotoTile
                         key={pid}
                         photo={photo}
-                        action={{
-                          label: "Remove from listing",
-                          symbol: "\u2715",
-                          onClick: () => s.unassignPhoto(pid),
-                        }}
+                        actions={[
+                          {
+                            label: "Return to ungrouped photos",
+                            icon: <Undo2 className="size-3.5" />,
+                            onClick: () => s.unassignPhoto(pid),
+                          },
+                        ]}
                       />
                     );
                   })}
