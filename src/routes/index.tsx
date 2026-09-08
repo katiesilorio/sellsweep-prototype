@@ -132,6 +132,10 @@ function Upload() {
           </div>
 
           <div className="mt-8 space-y-4">
+            <button className="btn-ghost" onClick={s.addGroup}>
+              Add a listing
+            </button>
+
             {s.groups.map((g) => (
               <div
                 key={g.id}
@@ -175,10 +179,6 @@ function Upload() {
                 </div>
               </div>
             ))}
-
-            <button className="btn-ghost" onClick={s.addGroup}>
-              Add a listing
-            </button>
           </div>
         </div>
       )}

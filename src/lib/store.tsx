@@ -143,7 +143,8 @@ export function SellsweepProvider({ children }: { children: ReactNode }) {
       groups,
       addGroup: () => {
         const id = `group-${groups.length + 1}`;
-        setGroups((g) => [...g, { id, name: `Listing ${g.length + 1}`, photoIds: [] }]);
+        // Newest listing goes to the top so the user never scrolls to find the one they just added.
+        setGroups((g) => [{ id, name: `Listing ${g.length + 1}`, photoIds: [] }, ...g]);
         setSelectedGroupId(id);
       },
       selectedGroupId,
@@ -167,8 +168,9 @@ export function SellsweepProvider({ children }: { children: ReactNode }) {
         if (mode === "one") {
           setListings([listingFromPhotos("listing-1", availablePhotos)]);
         } else {
+          // groups are stored newest first; listings read in creation order.
           setListings(
-            groups.map((g, index) =>
+            [...groups].reverse().map((g, index) =>
               listingFromPhotos(
                 `listing-${index + 1}`,
                 g.photoIds.map((pid) => availablePhotos.find((p) => p.id === pid)!),
