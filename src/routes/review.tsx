@@ -201,11 +201,10 @@ function SingleForm({ listing }: { listing: Listing }) {
           <label className="block">
             <span className="text-xs text-muted-foreground">Suggested price</span>
             <input
-              className="field mt-1"
-              value={listing.price}
-              onChange={(e) =>
-                updateListing(listing.id, { price: parseFloat(e.target.value) || 0 })
-              }
+              className="field mt-1 bg-muted/60 text-muted-foreground"
+              value={money(listing.price)}
+              readOnly
+              title="Set a custom price per marketplace in the Marketplaces panel."
             />
             <span className="mt-1 flex items-center gap-2 text-[0.7rem] text-muted-foreground">
               Priced against comparable listings. <ComparablesButton listing={listing} />
@@ -300,9 +299,10 @@ function MultipleTable() {
                 <label className="block">
                   <span className="text-[0.7rem] text-muted-foreground">Suggested price</span>
                   <input
-                    className="field mt-1"
-                    value={l.price}
-                    onChange={(e) => updateListing(l.id, { price: parseFloat(e.target.value) || 0 })}
+                    className="field mt-1 bg-muted/60 text-muted-foreground"
+                    value={money(l.price)}
+                    readOnly
+                    title="Set a custom price per marketplace in the Marketplaces panel."
                   />
                   <span className="mt-1 block">
                     <ComparablesButton listing={l} compact />
