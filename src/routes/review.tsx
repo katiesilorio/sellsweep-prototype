@@ -3,6 +3,15 @@ import { useEffect, useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { MarketplaceRows } from "@/components/MarketplaceControls";
 import { PhotoTile } from "@/components/PhotoTile";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { MARKETPLACES, money } from "@/data/demo";
 import { shippingFor, useSellsweep, type Listing } from "@/lib/store";
 
 export const Route = createFileRoute("/review")({
@@ -64,6 +73,66 @@ function DimsFields({ listing, compact }: { listing: Listing; compact?: boolean 
   );
 }
 
+function ComparablesButton({ listing, compact }: { listing: Listing; compact?: boolean }) {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <button
+          type="button"
+          className={`${compact ? "text-[0.7rem]" : "text-xs"} text-primary underline underline-offset-2`}
+        >
+          See comparables
+        </button>
+      </DialogTrigger>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>How this price was suggested</DialogTitle>
+          <DialogDescription>
+            sellsweep looked at recent listings like this one on each marketplace and suggested{" "}
+            {money(listing.price)}. Everything below is simulated for this prototype.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="mt-2 max-h-[60vh] space-y-5 overflow-y-auto pr-1">
+          {MARKETPLACES.map((m) => {
+            const comps = listing.comparables[m];
+            const avg = comps.reduce((sum, c) => sum + c.price, 0) / comps.length;
+            return (
+              <div key={m}>
+                <div className="flex items-baseline justify-between">
+                  <h3 className="text-sm font-medium">{m}</h3>
+                  <span className="text-xs text-muted-foreground">
+                    {comps.length} {comps.length === 1 ? "comparable" : "comparables"}, average{" "}
+                    {money(avg)}
+                  </span>
+                </div>
+                <ul className="mt-2 divide-y divide-border rounded-xl border border-border">
+                  {comps.map((c) => (
+                    <li key={c.title} className="flex items-center justify-between gap-4 px-3 py-2">
+                      <div className="min-w-0">
+                        <p className="truncate text-sm">{c.title}</p>
+                        <p className="text-[0.7rem] text-muted-foreground">{c.note}</p>
+                      </div>
+                      <span className="text-sm">{money(c.price)}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function PrimaryBadge() {
+  return (
+    <span className="absolute left-2 top-2 rounded-full bg-background/90 px-2 py-0.5 text-[0.65rem] font-medium text-foreground shadow-card">
+      Primary
+    </span>
+  );
+}
+
 function CopyrightBanner({ flagged }: { flagged: Listing[] }) {
   if (flagged.length === 0) {
     return (
@@ -89,12 +158,19 @@ function CopyrightBanner({ flagged }: { flagged: Listing[] }) {
 
 function SingleForm({ listing }: { listing: Listing }) {
   const { updateListing } = useSellsweep();
+  const [toast, setToast] = useState<string | null>(null);
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), 2500);
+    return () => clearTimeout(t);
+  }, [toast]);
   return (
     <div className="grid grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] gap-12">
       <div className="space-y-6">
         <div className="grid grid-cols-4 gap-4">
-          <div className="col-span-2">
+          <div className="relative col-span-2">
             {listing.photos[0] && <PhotoTile photo={listing.photos[0]} size="lg" />}
+            {listing.photos[0] && <PrimaryBadge />}
           </div>
           <div className="col-span-2 grid grid-cols-2 content-start gap-4">
             {listing.photos.slice(1).map((p) => (
@@ -131,8 +207,8 @@ function SingleForm({ listing }: { listing: Listing }) {
                 updateListing(listing.id, { price: parseFloat(e.target.value) || 0 })
               }
             />
-            <span className="mt-1 block text-[0.7rem] text-muted-foreground">
-              Priced against comparable listings.
+            <span className="mt-1 flex items-center gap-2 text-[0.7rem] text-muted-foreground">
+              Priced against comparable listings. <ComparablesButton listing={listing} />
             </span>
           </label>
           <label className="block">
@@ -148,8 +224,13 @@ function SingleForm({ listing }: { listing: Listing }) {
 
       <div>
         <h2 className="text-sm font-medium">Marketplaces</h2>
+        {toast && (
+          <div className="mt-3 rounded-xl border border-border bg-card px-4 py-2 text-xs shadow-card">
+            {toast}
+          </div>
+        )}
         <div className="mt-4">
-          <MarketplaceRows listing={listing} />
+          <MarketplaceRows listing={listing} onApplied={setToast} />
         </div>
       </div>
     </div>
@@ -179,7 +260,10 @@ function MultipleTable() {
           <div className="grid grid-cols-[180px_minmax(0,1fr)_260px] gap-8">
             <div className="flex flex-wrap gap-2">
               {l.photos.map((p, i) => (
-                <PhotoTile key={p.id} photo={p} size={i === 0 ? "md" : "sm"} hideCaption />
+                <div key={p.id} className="relative">
+                  <PhotoTile photo={p} size={i === 0 ? "md" : "sm"} hideCaption />
+                  {i === 0 && <PrimaryBadge />}
+                </div>
               ))}
             </div>
 
@@ -220,6 +304,9 @@ function MultipleTable() {
                     value={l.price}
                     onChange={(e) => updateListing(l.id, { price: parseFloat(e.target.value) || 0 })}
                   />
+                  <span className="mt-1 block">
+                    <ComparablesButton listing={l} compact />
+                  </span>
                 </label>
                 <label className="block">
                   <span className="text-[0.7rem] text-muted-foreground">Shipping cost</span>
@@ -242,12 +329,12 @@ function MultipleTable() {
                       setToast("Marketplace choices applied to every listing.");
                     }}
                   >
-                    Apply to all
+                    Apply to all listings
                   </button>
                 )}
               </div>
               <div className="mt-3">
-                <MarketplaceRows listing={l} compact />
+                <MarketplaceRows listing={l} compact onApplied={setToast} />
               </div>
             </div>
           </div>

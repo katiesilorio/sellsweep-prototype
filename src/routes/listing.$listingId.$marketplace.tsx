@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { MARKETPLACES, MARKETPLACE_SLUGS, money } from "@/data/demo";
-import { buyerPrice, shippingFor, useSellsweep } from "@/lib/store";
+import { buyerPrice, shippingFor, shippingIncluded, useSellsweep } from "@/lib/store";
 
 export const Route = createFileRoute("/listing/$listingId/$marketplace")({
   head: () => ({
@@ -35,7 +35,6 @@ function FakeListing() {
 
   if (!listing || !name) return null;
 
-  const cfg = listing.marketplaces[name];
   const ship = shippingFor(listing);
 
   return (
@@ -66,7 +65,7 @@ function FakeListing() {
         <h1 className="mt-8 text-2xl font-semibold">{listing.title}</h1>
         <p className="mt-3 text-xl">{money(buyerPrice(listing, name))}</p>
         <p className="mt-1 text-sm text-muted-foreground">
-          {cfg.pricing === "Price includes shipping"
+          {shippingIncluded(listing, name)
             ? "Free shipping"
             : ship !== null
               ? `+ shipping ${money(ship)}`

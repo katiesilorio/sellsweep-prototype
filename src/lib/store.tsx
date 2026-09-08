@@ -3,6 +3,7 @@ import {
   DEMO_ITEMS,
   MARKETPLACES,
   shippingCostForWeight,
+  type Comparable,
   type DemoPhoto,
   type Marketplace,
   type PricingStrategy,
@@ -12,6 +13,8 @@ import {
 export type MarketplaceConfig = {
   selected: boolean;
   pricing: PricingStrategy;
+  /** Used only when pricing is "Custom price". Null until the user types one. */
+  customPrice: number | null;
   shipping: ShippingMethod;
 };
 
@@ -30,6 +33,7 @@ export type Listing = {
   flagText?: string | undefined;
   accepted: boolean;
   marketplaces: Record<Marketplace, MarketplaceConfig>;
+  comparables: Record<Marketplace, Comparable[]>;
 };
 
 export type Mode = "one" | "multiple" | null;
@@ -40,8 +44,9 @@ function defaultMarketplaces(): Record<Marketplace, MarketplaceConfig> {
   const out = {} as Record<Marketplace, MarketplaceConfig>;
   for (const m of MARKETPLACES) {
     out[m] = {
-      selected: true,
-      pricing: "Price listed, shipping added",
+      selected: false,
+      pricing: "Suggested price",
+      customPrice: null,
       shipping: "Customer pays shipping",
     };
   }
@@ -56,12 +61,22 @@ export function shippingFor(listing: Listing): number | null {
   return shippingCostForWeight(w);
 }
 
-export function buyerPrice(listing: Listing, m: Marketplace): number {
+/** The item price on one marketplace before shipping: the AI suggestion, or the custom price if one is set. */
+export function itemPrice(listing: Listing, m: Marketplace): number {
   const cfg = listing.marketplaces[m];
-  if (cfg.pricing === "Price includes shipping") {
-    return listing.price + (shippingFor(listing) ?? 0);
-  }
+  if (cfg.pricing === "Custom price" && cfg.customPrice !== null) return cfg.customPrice;
   return listing.price;
+}
+
+export function shippingIncluded(listing: Listing, m: Marketplace): boolean {
+  return listing.marketplaces[m].shipping === "Include in total price, free shipping";
+}
+
+/** What the buyer sees as the price on one marketplace. */
+export function buyerPrice(listing: Listing, m: Marketplace): number {
+  const base = itemPrice(listing, m);
+  if (shippingIncluded(listing, m)) return base + (shippingFor(listing) ?? 0);
+  return base;
 }
 
 type Ctx = {
@@ -85,7 +100,10 @@ type Ctx = {
   buildListings: () => void;
   updateListing: (id: string, patch: Partial<Listing>) => void;
   setMarketplace: (id: string, m: Marketplace, patch: Partial<MarketplaceConfig>) => void;
+  /** Copy one listing's whole marketplace setup (which are checked, and their settings) to every other listing. */
   applyToAll: (sourceId: string) => void;
+  /** Within one listing, copy one marketplace's price and shipping settings to the other three. Does not change which are checked. */
+  applyToAllMarketplaces: (id: string, sourceM: Marketplace) => void;
   reset: () => void;
 };
 
@@ -126,6 +144,7 @@ export function SellsweepProvider({ children }: { children: ReactNode }) {
         flagText: item.flagText,
         accepted: false,
         marketplaces: defaultMarketplaces(),
+        comparables: item.comparables,
       };
     }
 
@@ -210,8 +229,24 @@ export function SellsweepProvider({ children }: { children: ReactNode }) {
           ls.map((l) => {
             if (l.id !== id) return l;
             const next = { ...l.marketplaces[m], ...patch };
-            if (next.pricing === "Price includes shipping") next.shipping = "Free shipping";
             return { ...l, marketplaces: { ...l.marketplaces, [m]: next } };
+          }),
+        ),
+      applyToAllMarketplaces: (id, sourceM) =>
+        setListings((ls) =>
+          ls.map((l) => {
+            if (l.id !== id) return l;
+            const src = l.marketplaces[sourceM];
+            const out = { ...l.marketplaces };
+            for (const m of MARKETPLACES) {
+              out[m] = {
+                ...out[m],
+                pricing: src.pricing,
+                customPrice: src.customPrice,
+                shipping: src.shipping,
+              };
+            }
+            return { ...l, marketplaces: out };
           }),
         ),
       applyToAll: (sourceId) =>

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { AppShell } from "@/components/AppShell";
 import { PhotoTile } from "@/components/PhotoTile";
 import { MARKETPLACES, money } from "@/data/demo";
-import { buyerPrice, shippingFor, useSellsweep } from "@/lib/store";
+import { buyerPrice, shippingFor, shippingIncluded, useSellsweep } from "@/lib/store";
 
 export const Route = createFileRoute("/summary")({
   head: () => ({
@@ -61,12 +61,12 @@ function Summary() {
                       return (
                         <li key={m} className="text-sm text-muted-foreground">
                           <span className="text-foreground">{m}</span> {money(buyerPrice(l, m))}
-                          {cfg.pricing === "Price includes shipping"
-                            ? ""
+                          {shippingIncluded(l, m)
+                            ? ", free shipping"
                             : ship !== null
                               ? ` + shipping ${money(ship)}`
-                              : " + shipping"}{" "}
-                          - {cfg.shipping}
+                              : " + shipping"}
+                          {cfg.pricing === "Custom price" ? " (custom price)" : ""}
                         </li>
                       );
                     })}
