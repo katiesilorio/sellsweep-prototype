@@ -54,6 +54,20 @@ function About() {
           </p>
         </Section>
 
+        <Section title="The automation already exists">
+          <p>
+            The part of sellsweep that does the work is already built, as a Claude skill: photos go
+            in, it identifies each item, writes the title and description, prices it against
+            comparable listings, checks it for copyright risk, and posts it to eBay, Etsy, Square, and
+            Facebook Marketplace. Katie uses it today to help her dad sell his handmade items.
+          </p>
+          <p>
+            What it does not have is a front end. Right now it runs as a conversation. This
+            prototype is the user interface for that automation, built to work out what the seller
+            should see and control at each step.
+          </p>
+        </Section>
+
         <Section title="What is assumed">
           <p>
             The seller is already onboarded and their marketplace accounts are already connected.
@@ -73,15 +87,16 @@ function About() {
 
         <Section title="What is next">
           <p>
-            The onboarding and account-connection flow, listing management, and live marketplace
-            connections.
+            Combining this interface with the automation that already runs in Claude, so the flow
+            shown here does the real work behind each screen. After that: the onboarding and
+            account-connection flow, and listing management.
           </p>
         </Section>
 
         <Section title="Who made it">
           <p>
-            This is a prototype built by Katie Silorio to test a direction. There are no real users
-            and no real data.
+            This is a prototype built by Katie Silorio to test a direction. Everything in it is
+            simulated: no real users, no real data, no real posts.
           </p>
         </Section>
 
