@@ -1,6 +1,13 @@
 import mugSet from "@/assets/mug-set.jpg";
+import mugSingle from "@/assets/mug-single.jpg";
+import mugHandle from "@/assets/mug-handle.jpg";
+import mugBase from "@/assets/mug-base.jpg";
 import brassLamp from "@/assets/brass-lamp.jpg";
+import lampUnlit from "@/assets/lamp-unlit.jpg";
+import lampBase from "@/assets/lamp-base.jpg";
 import coasters from "@/assets/coasters.jpg";
+import coasterSingle from "@/assets/coaster-single.jpg";
+import coasterEdge from "@/assets/coaster-edge.jpg";
 
 /**
  * All dummy data for the sellsweep prototype lives here.
@@ -57,9 +64,9 @@ export const DEMO_ITEMS: DemoItem[] = [
     name: "Hand-thrown ceramic mug set",
     photos: [
       { id: "p1-1", label: "Pair together", src: mugSet },
-      { id: "p1-2", label: "One mug alone", src: mugSet },
-      { id: "p1-3", label: "Handle detail", src: mugSet },
-      { id: "p1-4", label: "Base with maker's stamp", src: mugSet },
+      { id: "p1-2", label: "One mug alone", src: mugSingle },
+      { id: "p1-3", label: "Handle detail", src: mugHandle },
+      { id: "p1-4", label: "Base with maker's stamp", src: mugBase },
     ],
     title: "Handmade Stoneware Mug Set of 2, Speckled Cream Glaze",
     price: 42.0,
@@ -73,8 +80,8 @@ export const DEMO_ITEMS: DemoItem[] = [
     name: "Vintage brass table lamp",
     photos: [
       { id: "p2-1", label: "Lamp lit", src: brassLamp },
-      { id: "p2-2", label: "Lamp unlit", src: brassLamp },
-      { id: "p2-3", label: "Switch and cord", src: brassLamp },
+      { id: "p2-2", label: "Lamp unlit", src: lampUnlit },
+      { id: "p2-3", label: "Switch and cord", src: lampBase },
     ],
     title: "Vintage Mid-Century Brass Table Lamp with Linen Shade, Works",
     price: 78.0,
@@ -88,8 +95,8 @@ export const DEMO_ITEMS: DemoItem[] = [
     name: "Hand-painted wooden coaster set",
     photos: [
       { id: "p3-1", label: "Set fanned out", src: coasters },
-      { id: "p3-2", label: "One coaster close up", src: coasters },
-      { id: "p3-3", label: "Backs with cork", src: coasters },
+      { id: "p3-2", label: "One coaster close up", src: coasterSingle },
+      { id: "p3-3", label: "Edge detail", src: coasterEdge },
     ],
     title: "Hand-Painted Wooden Coasters, Set of 4, University Team Colors",
     price: 28.0,
