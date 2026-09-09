@@ -1,37 +1,43 @@
-# sellsweep-prototype
+# sellsweep prototype
 
-Build a desktop web app called sellsweep. It is a clickable prototype of one flow: a seller uploads photos of items, AI turns them into finished marketplace listings, the seller reviews and adjusts them, confirms any copyright risk, and posts them to several marketplaces at once. There is no login, no real AI, no real marketplace connection, and no persistence. Every AI result is dummy data written into the app. Every marketplace action is simulated.
+A clickable prototype of sellsweep's posting flow: photograph an item, let AI draft the listing, review it, accept any copyright risk, and post it to eBay, Etsy, Square, and Facebook Marketplace at once.
 
-Name the project exactly sellsweep-prototype.
+**Try it:** [sellsweep-prototype.lovable.app](https://sellsweep-prototype.lovable.app/), or the short link [bit.ly/sellsweep-prototype](https://bit.ly/sellsweep-prototype). Desktop only; mobile shows a notice.
 
-Design: minimal and sleek. Mostly white space, generous margins, a near-black text color, a muted grey for secondary text, one accent color used sparingly for primary buttons and selected states, a clean geometric sans typeface, line icons rather than emoji, rounded cards and soft shadows only where a card helps. Large, calm type. No dashboard clutter, no sidebar navigation, no marketing copy. The app should feel like a single focused tool that does one thing well. Never use an em dash anywhere in the app. Use a period, a comma, or a spaced hyphen instead.
+Everything in the prototype is simulated. There is no login, no real AI call, no real marketplace connection, and nothing is saved between visits. The demo items, prices, comparables, and marketplace pages are dummy data written for the demo.
 
-Desktop only. On any viewport narrower than 900 pixels, do not render the app; render a single centered card that says sellsweep is optimized for desktop and mobile is coming soon.
+## What sellsweep is
 
-Two persistent elements appear on every app screen. First, a thin banner across the top that tells the user this prototype assumes they are already onboarded, meaning their marketplace accounts are already connected, and that the prototype covers posting only. The banner links to the About page. Second, a small step indicator showing where the user is in the flow: Upload, Review, Summary, Post, Done.
+Selling online means re-creating the same listing on every marketplace. Each one wants the same information, photos, title, description, price, category, in a different shape with a different taxonomy. The thinking gets done once; the transcription gets done four times. sellsweep does the thinking once and removes the transcription.
 
-The flow, in order: Upload, Analyzing, Review, Summary, Posting, Done. Plus an About page reachable from the banner. The screen blocks below describe each. Do not add screens, settings pages, account pages, or listing management. Do not add facts, prices, or marketplace names that are not in the blocks.
+## What the prototype shows
 
-Dummy data lives in one place in the code so it is easy to change later. Use royalty-free stock photos of the three demo items if you can find good ones; otherwise render clean, clearly labeled placeholder image tiles carrying the item name. The photos should look like product photos, not icons.
+- **Upload.** One listing or several. Photos are grouped into listings by hand; nothing moves forward until every photo belongs to a listing.
+- **Analyzing.** The steps the AI runs: reading photos, identifying items, writing titles and descriptions, researching comparable prices, checking for copyright risk.
+- **Review.** Every AI draft is editable. Per marketplace, the seller chooses a price strategy (the suggested price, or a custom one) and a shipping strategy (the customer pays, or shipping is folded into the price with free shipping), and sees what the buyer will see. A comparables popup shows the listings the price was based on, per marketplace. Settings can be applied across marketplaces within a listing, or across listings.
+- **Copyright check.** An item the seller made that carries someone else's logo is flagged on Review and again on Summary, and the seller has to consciously accept the risk before posting. The prototype never refuses to post and never hides a marketplace; it surfaces the risk and makes the decision explicit.
+- **Summary, Posting, Done.** What will post where, a simulated posting run, and a simulated listing page per marketplace, each following that marketplace's page conventions (no logos or brand marks).
+- **About.** What is in, what is out, and what is next, inside the app.
 
-This project was built with [Lovable](https://lovable.dev).
+## The automation already exists
 
-## Build with Lovable
+The working part of sellsweep is built as a Claude skill: photos in, item identified, listing written, price researched against comparables, copyright risk checked, and the listing posted to the four marketplaces. It runs today, as a conversation, to help a real seller list handmade items. What it lacks is a front end. This prototype is the front end, built to work out what the seller should see and control at each step. The next step is combining the two.
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/6a9c6025-c00c-4a1a-91ad-05279ce00cba).
+## How it was built
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+The first draft was generated in [Lovable](https://lovable.dev) from a written spec, for the look and feel. Every functional change after that was made in the code with Claude and pushed to this repository, which Lovable syncs. The app is a TanStack Start (React) project.
 
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+To run it locally you need Node.js and npm:
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
+git clone https://github.com/katiesilorio/sellsweep-prototype.git
+cd sellsweep-prototype
 npm i
 npm run dev
 ```
 
+The dummy data lives in `src/data/demo.ts`. The screens are in `src/routes/`. The simulated marketplace pages are in `src/components/ListingPreview.tsx`.
+
+## Who made it
+
+Katie Silorio, September 2026. A prototype built to test a direction. No real users, no real data, no real posts.
